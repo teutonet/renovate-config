@@ -1,0 +1,68 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "regexManagers": [
+    {
+      "description": "Update Docker images from mirror in .gitlab-ci.yml",
+      "fileMatch": ["^\\.gitlab-ci\\.yml$"],
+      "matchStrings": [
+        "\\$\\{REGISTRY_MIRROR(?:_LIB)?\\}(?<depName>[^$]+?):(?<currentValue>[^$]+?)(?:\\s|$)"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "description": "Update Docker images from mirror in Dockerfiles",
+      "fileMatch": ["Dockerfile$"],
+      "matchStrings": [
+        "FROM \\$\\{REGISTRY_MIRROR(?:_LIB)?\\}(?<depName>[^$]+?):(?<currentValue>[^$]+?)\\s"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "description": "Update IMAGE_XYZ for versions.sh scripts",
+      "fileMatch": ["versions\\.sh$"],
+      "matchStrings": [
+        "\\n(?:export )?[A-Z0-9_]+=(?<depName>[^$]+?):(?<currentValue>[^$\\n]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "description": "Update XYZ_VERSION for versions.sh scripts",
+      "fileMatch": ["versions\\.sh$"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?)(?: (?:packageName|lookupName)=(?<packageName>.+?))?(?: extractVersion=(?<extractVersion>.+?))?(?: versioning=(?<versioning>.+?))?(?: registryUrl=(?<registryUrl>.+?))?\\s *(?:export )?[A-Z0-9_]+?_VERSION=(?<currentValue>.+?)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+      "extractVersionTemplate": "{{#if extractVersion}}{{{extractVersion}}}{{else}}^(?<version>.*){{/if}}"
+    },
+    {
+      "description": "Update _VERSION variables in Dockerfiles",
+      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?)(?: (?:packageName|lookupName)=(?<packageName>.+?))?(?: extractVersion=(?<extractVersion>.+?))?(?: versioning=(?<versioning>.+?))?(?: registryUrl=(?<registryUrl>.+?))?\\s(?:ENV|ARG) [A-Z0-9_]+?_VERSION=(?<currentValue>.+?)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+      "extractVersionTemplate": "{{#if extractVersion}}{{{extractVersion}}}{{else}}^(?<version>.*){{/if}}"
+    },
+    {
+      "description": "Update EXTENSION versions in SQL",
+      "fileMatch": ["\\.sql$"],
+      "matchStrings": [
+        "-- renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?)(?: (?:packageName|lookupName)=(?<packageName>.+?))?(?: extractVersion=(?<extractVersion>.+?))?(?: versioning=(?<versioning>.+?))?(?: registryUrl=(?<registryUrl>.+?))?\\s+.*?'(?<currentValue>.+?)';"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver{{/if}}",
+      "extractVersionTemplate": "{{#if extractVersion}}{{{extractVersion}}}{{else}}^(?<version>.*){{/if}}"
+    },
+    {
+      "description": "Update version variables in .yaml files",
+      "fileMatch": ["\\.ya?ml$"],
+      "matchStrings": [
+        ": (?<currentValue>.+?)\\s+# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>.+?)(?: (?:packageName|lookupName)=(?<packageName>.+?))?(?: extractVersion=(?<extractVersion>.+?))?(?: versioning=(?<versioning>.+?))?(?: registryUrl=(?<registryUrl>.+?))?\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver{{/if}}",
+      "extractVersionTemplate": "{{#if extractVersion}}{{{extractVersion}}}{{else}}^(?<version>.*){{/if}}"
+    }
+  ]
+}
