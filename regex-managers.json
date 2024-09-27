@@ -23,7 +23,7 @@
       "description": "Update IMAGE_XYZ for versions.sh scripts",
       "fileMatch": ["versions\\.sh$"],
       "matchStrings": [
-        "\\n(?:export )?[A-Z0-9_]+=(?<depName>[^$]+?):(?<currentValue>[^$\\n]+)"
+        "(?:^|\\n)?(?:export )?[A-Z0-9_]+=(?<depName>[^$\\n]+?):(?<currentValue>[^$\\n]+)"
       ],
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker"
